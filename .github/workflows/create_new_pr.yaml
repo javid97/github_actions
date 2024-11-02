@@ -21,7 +21,7 @@ jobs:
       - name: Create new branch
         run: |
           NEW_BRANCH="follow-up-${{github.event.pull_request.number}}"
-          git checkout -b "$NEW_BRANCH"
+          git checkout -b $NEW_BRANCH
 
       - name: Make changes
         run: |

@@ -1,0 +1,26 @@
+name: PR title Check
+
+on: pull_request
+
+jobs:
+  check-pr-title:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check PR title
+        id: check_title
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          echo "PR title: $PR_TITLE"
+
+          # Define the title pattern (e.g., it must start with Javid:, fix:, chore:)
+          if [[ ! "$PR_TITLE" =~ ^(Javid): ]]; then
+            echo "❌ The PR title does not follow the required format (e.g., 'Javid:')."
+            exit 1
+          fi
+
+        shell: bash
+
+      - name: Success message
+        if: success()
+        run: echo "✅ PR title is valid."
