@@ -30,8 +30,7 @@ jobs:
           git commit -m "Add followup changes for #${{github.event.pull_request.number}}"
 
       - name: Push Changes
-        run: |
-          git push --set-upstream origin $NEW_BRANCH
+        run: git push -u origin $NEW_BRANCH
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
