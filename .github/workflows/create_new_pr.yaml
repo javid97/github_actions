@@ -26,7 +26,8 @@ jobs:
       - name: Make changes
         run: |
           echo "This is a follow up PR for PR #${{github.event.pull_request.number}}" >> followup.txt
-          git commit -am "Add followup changes for #${{github.event.pull_request.number}}"
+          git add .
+          git commit -m "Add followup changes for #${{github.event.pull_request.number}}"
 
       - name: Push Changes
         run: |
