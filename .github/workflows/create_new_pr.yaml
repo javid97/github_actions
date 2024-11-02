@@ -38,7 +38,7 @@ jobs:
         with:
           title: "Follow-up PR for #${{ github.event.pull_request.number }}"
           body: "This is an automated follow-up PR for the changes in PR #${{ github.event.pull_request.number }}."
-          head: "$NEW_BRANCH"
+          head: $NEW_BRANCH
           base: main
           reviewers: ${{ github.event.pull_request.requested_reviewers }}
           assignees: ${{ github.event.pull_request.user.login }}
