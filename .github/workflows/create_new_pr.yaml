@@ -1,0 +1,43 @@
+name: Create a PR
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  create-follow-up-pr:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Git Credentials
+        run: |
+          git config --global user.name "${{github.actor}}"
+          git config --global user.email "${{github.event.pull_request.user.email || 'bot@example.com'}}"
+
+      - name: Create new branch
+        run: |
+          NEW_BRANCH="follow-up-${{github.event.pull_request.number}}"
+          git checkout -b "$NEW_BRANCH"
+
+      - name: Make changes
+        run: |
+          echo "This is a follow up PR for PR #${{github.event.pull_request.number}}" >> followup.txt
+          git commit -am "Add followup changes for #${{github.event.pull_request.number}}"
+
+      - name: Push Changes
+        run: |
+          git push origin "$NEW_BRANCH"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: "Follow-up PR for #${{ github.event.pull_request.number }}"
+          body: "This is an automated follow-up PR for the changes in PR #${{ github.event.pull_request.number }}."
+          head: "$NEW_BRANCH"
+          base: main
+          reviewers: ${{ github.event.pull_request.requested_reviewers }}
+          assignees: ${{ github.event.pull_request.user.login }}
