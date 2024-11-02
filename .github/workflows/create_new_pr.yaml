@@ -17,6 +17,7 @@ jobs:
         run: |
           git config --global user.name "${{github.actor}}"
           git config --global user.email "${{github.event.pull_request.user.email || 'bot@example.com'}}"
+          git config --global push.autoSetupRemote true
 
       - name: Create new branch
         run: |
