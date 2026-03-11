@@ -29,11 +29,14 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
 
-      - name: Create pull request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Merge ${{ github.event.inputs.head_branch || 'feature/a' }} into ${{ github.event.inputs.base_branch || 'qa' }}"
-          body: "This PR was opened automatically by the workflow."
-          branch: "${{ github.event.inputs.head_branch || 'feature/a' }}"
-          base: "${{ github.event.inputs.base_branch || 'qa' }}"
+      - name: Authenticate GitHub CLI
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+      - name: Create pull request via CLI
+        run: |
+          gh pr create \
+            --head "${{ github.event.inputs.head_branch || 'feature/a' }}" \
+            --base "${{ github.event.inputs.base_branch || 'qa' }}" \
+            --title "Merge ${{ github.event.inputs.head_branch || 'feature/a' }} into ${{ github.event.inputs.base_branch || 'qa' }}" \
+            --body "This PR was opened automatically by the workflow."
