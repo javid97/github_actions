@@ -4,18 +4,17 @@ on:
   workflow_dispatch:
     inputs:
       head_branch:
-        description: 'Branch to merge from'
+        description: "Branch to merge from"
         required: false
-        default: 'feature/a'
+        default: "feature/a"
       base_branch:
-        description: 'Branch to merge into'
+        description: "Branch to merge into"
         required: false
-        default: 'qa'
+        default: "qa"
 
 permissions:
   contents: write
   pull-requests: write
-
 
 jobs:
   create-pr:
@@ -36,5 +35,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           title: "Merge ${{ github.event.inputs.head_branch || 'feature/a' }} into ${{ github.event.inputs.base_branch || 'qa' }}"
           body: "This PR was opened automatically by the workflow."
-          head: "${{ github.event.inputs.head_branch || 'feature/a' }}"
+          branch: "${{ github.event.inputs.head_branch || 'feature/a' }}"
           base: "${{ github.event.inputs.base_branch || 'qa' }}"
