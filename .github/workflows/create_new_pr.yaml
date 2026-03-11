@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [closed]
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   create-follow-up-pr:
     if: github.event.pull_request.merged == true
@@ -39,7 +43,7 @@ jobs:
         with:
           title: "Follow-up PR for #${{ github.event.pull_request.number }}"
           body: "This is an automated follow-up PR for the changes in PR #${{ github.event.pull_request.number }}."
-          head: $NEW_BRANCH
+          branch: $NEW_BRANCH
           base: main
           reviewers: ${{ github.event.pull_request.requested_reviewers }}
           assignees: ${{ github.event.pull_request.user.login }}

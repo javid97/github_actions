@@ -1,0 +1,47 @@
+name: Create PR from feature/a to qa
+
+on:
+  workflow_dispatch:
+    inputs:
+      head_branch:
+        description: "Branch to merge from"
+        required: false
+        default: "feature/a"
+      base_branch:
+        description: "Branch to merge into"
+        required: false
+        default: "qa"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Configure git
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Fetch branches
+        run: |
+          git fetch origin "${{ github.event.inputs.head_branch || 'feature/a' }}" \
+            && git fetch origin "${{ github.event.inputs.base_branch || 'qa' }}"
+
+      - name: Authenticate GitHub CLI
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+      - name: Create pull request via CLI
+        run: |
+          gh pr create \
+            --head "${{ github.event.inputs.head_branch || 'feature/a' }}" \
+            --base "${{ github.event.inputs.base_branch || 'qa' }}" \
+            --title "Merge ${{ github.event.inputs.head_branch || 'feature/a' }} into ${{ github.event.inputs.base_branch || 'qa' }}" \
+            --body "This PR was opened automatically by the workflow."

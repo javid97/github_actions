@@ -2,6 +2,9 @@ name: PR title Check
 
 on: pull_request
 
+permissions:
+  pull-requests: write
+
 jobs:
   check-pr-title:
     runs-on: ubuntu-latest
